@@ -1,0 +1,7 @@
+hooks:
+  before_specify:
+    - extension: git
+      command: create-new-feature-branch
+      optional: false
+      description: Create and switch to a new feature branch from main before creating a new spec.
+      prompt: Create a new feature branch from main before the spec is created.
