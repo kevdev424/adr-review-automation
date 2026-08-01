@@ -29,6 +29,8 @@ When an author starts a new ADR using the repository’s creation workflow, the 
 
 When an ADR draft is complete, the author can open a pull request against the main branch so that the repository’s review and governance rules apply before the change can be merged.
 
+The automated review workflow MUST expose two distinct status checks for the pull request: one blocking validation check named `adr-review-validation` and one informational review check named `adr-review-commentary`. The `adr-review-validation` check MUST fail when objective defects are detected, while the `adr-review-commentary` check MUST complete and post advisory feedback without blocking merge.
+
 **Why this priority**: Pull requests are the primary control point for enforcing review quality and protecting the main branch.
 
 **Independent Test**: A completed ADR can be submitted as a pull request and the repository can evaluate it against the required review process.
@@ -37,12 +39,15 @@ When an ADR draft is complete, the author can open a pull request against the ma
 
 1. **Given** an ADR branch contains completed work, **When** the author opens a pull request to the main branch, **Then** the repository starts the required review workflow and applies the configured review rules.
 2. **Given** the pull request is opened for a new ADR, **When** the review process begins, **Then** the repository requires both a successful automated review run and a human approval before merge is allowed.
+3. **Given** the repository ruleset definition is updated on the main branch, **When** the deployment workflow runs, **Then** the workflow updates the GitHub ruleset so the enforced policy stays current.
 
 ---
 
 ### User Story 3 - Receive separate blocking validation and informational review feedback (Priority: P2)
 
 Reviewers and authors can receive two distinct automated review outputs: a blocking validation pass that checks for objective issues such as schema problems, missing required information, or obvious incompleteness, and an informational review comment that captures opinions, potential conflicts, or stylistic concerns without preventing merge.
+
+The same review skill MUST be usable both locally and in the GitHub pull request workflow so that contributors can run the review before opening a PR and the PR workflow can run the identical evaluation path after the PR is created.
 
 **Why this priority**: This separation makes the review result easy to understand and ensures objective quality issues are enforced while subjective critique remains advisory.
 
@@ -62,6 +67,7 @@ Reviewers and authors can receive two distinct automated review outputs: a block
 - How does the workflow behave when the automated review fails or times out?
 - What happens when a pull request is opened without a human reviewer assigned?
 - How does the repository handle a new ADR that appears to conflict with multiple existing ADRs?
+- What happens when the ruleset definition changes and the deployment workflow has not yet updated GitHub?
 
 ## Requirements *(mandatory)*
 
@@ -77,7 +83,10 @@ Reviewers and authors can receive two distinct automated review outputs: a block
 - **FR-008**: The automated review workflow MUST publish a blocking validation result when objective issues are detected and MUST publish a separate informational review comment for advisory observations that do not block merge.
 - **FR-009**: The automated review workflow MUST fail the blocking validation step when objective defects are present, while still allowing the informational review step to complete and report advisory findings.
 - **FR-010**: The repository MUST allow the review rules to be updated over time without manual drift, so that the governance policy remains aligned with the current ADR process.
-- **FR-011**: The review process MUST permit merge only when the blocking validation step passes, the automated review workflow has completed successfully, and at least one human reviewer has approved the pull request.
+- **FR-011**: The review process MUST permit merge only when the `adr-review-validation` status check passes, the `adr-review-commentary` status check completes successfully or with only informational findings, and at least one human reviewer has approved the pull request.
+- **FR-012**: The local ADR review experience MUST invoke the same review skill used by the GitHub pull request workflow so that local and remote review results are consistent.
+- **FR-013**: The repository MUST provide a local review command that runs the same review skill and returns a blocking result for objective defects and a separate informational result for advisory observations.
+- **FR-014**: When the repository ruleset definition changes on main, a deployment workflow MUST update the GitHub ruleset so the repository policy remains current.
 
 ### Key Entities *(include if feature involves data)*
 
