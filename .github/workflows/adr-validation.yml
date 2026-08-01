@@ -1,0 +1,30 @@
+name: ADR Validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/adr/**'
+      - '.specify/scripts/powershell/validate-adr.ps1'
+      - '.github/workflows/adr-validation.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/adr/**'
+      - '.specify/scripts/powershell/validate-adr.ps1'
+      - '.github/workflows/adr-validation.yml'
+
+jobs:
+  validate-adr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PowerShell
+        uses: pwsh@v0.1.0
+
+      - name: Validate ADRs
+        shell: pwsh
+        run: |
+          ./\.specify/scripts/powershell/validate-adr.ps1

@@ -21,6 +21,7 @@ Represents a single architectural decision document.
 - related_adrs: zero or many additional ADR identifiers for context
 - relationship_rationale: explanation for why the selected relationships were chosen
 - conflict_warnings: zero or many conflict signals discovered during drafting
+- validation_summary: PASS, WARN, or FAIL values for required metadata and relationship checks
 
 ## Relationship
 
@@ -48,3 +49,4 @@ Represents a warning that a proposed ADR may contradict an existing decision.
 - An ADR may declare zero or many supersedes entries.
 - A circular dependency chain should be flagged as an invalid or high-risk relationship.
 - Conflicts must be represented as warnings for review, not as silent acceptance.
+- The validation summary should be emitted in a fixed template so reviewers can assess the draft consistently.

@@ -15,21 +15,24 @@ The workflow accepts the following information:
 - existing_adr_references (optional)
 - dependencies (optional)
 - supersedes (optional)
+- related_adrs (optional)
 - relationship_rationale (optional)
-- conflict_review_notes (optional)
+- conflict_warnings (optional)
 
 ## Output
 
 The workflow produces a markdown ADR document with:
-- front matter containing title, status, date, authors, tags, supersedes, and superseded_by values
+- front matter containing title, status, date, authors, tags, dependencies, supersedes, related_adrs, relationship_rationale, conflict_warnings, and superseded_by values
 - a context section
 - a decision section
 - consequences and alternatives sections
 - relationship metadata for dependencies and supersession
 - warning notes for potential conflicts that require human review
+- a validation summary using the fixed PASS/WARN/FAIL template
 
 ## Validation Rules
 
 - The ADR must include the required sections expected by the repository schema.
 - Relationships must be traceable and explicit.
 - Conflicts must be surfaced as review warnings rather than silently ignored.
+- Validation output must report required metadata, dependency references, supersession references, and circular relationship checks consistently.

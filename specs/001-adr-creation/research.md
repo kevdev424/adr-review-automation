@@ -39,3 +39,13 @@
 **Alternatives considered**:
 - Introduce an entirely new ADR format.
 - Store relationship data outside the ADR document.
+
+## Decision 5: Support zero-to-many relationship chains
+
+**Decision**: The skill should allow an ADR to declare zero dependencies and zero supersessions while still preserving a clear review trail when relationships exist.
+
+**Rationale**: Some ADRs are standalone decisions, while others sit in a dependency chain. The workflow should support both without forcing unnecessary metadata.
+
+**Alternatives considered**:
+- Require at least one dependency or supersession for every ADR.
+- Omit relationship metadata entirely when no prior ADRs are found.

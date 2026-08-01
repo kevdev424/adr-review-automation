@@ -17,6 +17,11 @@ Create an ADR document for `${input:DecisionTitle}` using structured formatting 
 - **Decision**: `${input:Decision}`
 - **Alternatives**: `${input:Alternatives}`
 - **Stakeholders**: `${input:Stakeholders}`
+- **ExistingADRReferences**: `${input:ExistingADRReferences}`
+- **Dependencies**: `${input:Dependencies}`
+- **Supersedes**: `${input:Supersedes}`
+- **RelationshipRationale**: `${input:RelationshipRationale}`
+- **ConflictWarnings**: `${input:ConflictWarnings}`
 
 ## Input Validation
 If any of the required inputs are not provided or cannot be determined from the conversation history, ask the user to provide the missing information before proceeding with ADR generation.
@@ -29,6 +34,11 @@ If any of the required inputs are not provided or cannot be determined from the 
 - Document alternatives with rejection rationale
 - Structure for machine parsing and human reference
 - Use coded bullet points (3-4 letter codes + 3-digit numbers) for multi-item sections
+- Discover existing ADRs from the repository under `docs/adr/` using the naming convention `adr-NNNN-[title-slug].md`; if no matching ADRs are found, explicitly state that no prior ADRs were discovered
+- Review any existing ADRs referenced in `ExistingADRReferences` before drafting, and if none are found state that no prior ADRs were discovered
+- Preserve dependency and supersession relationships using the `dependencies`, `supersedes`, `related_adrs`, `relationship_rationale`, and `conflict_warnings` metadata fields in the front matter
+- Surface likely conflicts as review warnings rather than silently proceeding
+- Include a validation summary section at the end of the ADR draft using the fixed PASS/WARN/FAIL template
 
 The ADR must be saved in the `/docs/adr/` directory using the naming convention: `adr-NNNN-[title-slug].md`, where NNNN is the next sequential 4-digit number (e.g., `adr-0001-database-selection.md`).
 
@@ -43,7 +53,11 @@ status: "Proposed"
 date: "YYYY-MM-DD"
 authors: "[Stakeholder Names/Roles]"
 tags: ["architecture", "decision"]
-supersedes: ""
+dependencies: []
+supersedes: []
+related_adrs: []
+relationship_rationale: ""
+conflict_warnings: []
 superseded_by: ""
 ---
 
@@ -98,4 +112,12 @@ superseded_by: ""
 - **REF-001**: [Related ADRs]
 - **REF-002**: [External documentation]
 - **REF-003**: [Standards or frameworks referenced]
+
+## Validation Summary
+
+- Required metadata: PASS|WARN|FAIL
+- Dependency references: PASS|WARN|FAIL
+- Supersession references: PASS|WARN|FAIL
+- Circular relationship checks: PASS|WARN|FAIL
+- Final status: PASS|WARN|FAIL
 ```
