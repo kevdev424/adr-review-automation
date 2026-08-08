@@ -1,4 +1,4 @@
-﻿## ADR Review Summary
+## ADR Review Summary
 
 - Blocking validation: PASS
 - Blocking findings: none
