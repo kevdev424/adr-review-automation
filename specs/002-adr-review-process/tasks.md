@@ -21,12 +21,7 @@
 
 **Purpose**: Build the shared review and governance infrastructure that must exist before the ADR review workflow can run.
 
-- [X] T005 Add a repository ruleset definition file at .github/rulesets/adr-review-ruleset.json
-- [X] T006 Add a GitHub Actions workflow at .github/workflows/adr-review.yml for PR review automation
-- [X] T007 Add a GitHub Actions workflow for ruleset deployment on merges to main
-- [X] T008 Create the Copilot CLI review skill definition at .specify/skills/review-adr/SKILL.md
-- [X] T009 Create the review prompt file at .github/prompts/review-adr.prompt.md
-
+- [X] T008 Create the Copilot CLI review skill definition at .agents/skills/review-adr/SKILL.md
 ---
 
 ## Phase 3: User Story 1 - Create an ADR from a dedicated feature branch (Priority: P1) 🎯 MVP
