@@ -25,9 +25,9 @@ jobs:
           ./\.specify/scripts/powershell/validate-adr.ps1
 
   adr-review-commentary:
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     needs: adr-review-validation
-    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
