@@ -45,7 +45,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p ./artifacts
-          if ! copilot run --skill ./.agents/skills/review-adr/SKILL.md --prompt "Review the ADR changes in docs/adr and produce a PR-ready markdown summary for the pull request. Include a blocking validation section for objective defects and an informational review section for advisory comments." > ./artifacts/adr-review-summary.md; then
+          if ! copilot -p "Using the review-adr skill, review the ADR changes in docs/adr and produce a PR-ready markdown summary for the pull request. Include a blocking validation section for objective defects and an informational review section for advisory comments." --allow-all-tools > ./artifacts/adr-review-summary.md; then
             printf '%s\n' \
               '## ADR Review Summary' \
               '' \

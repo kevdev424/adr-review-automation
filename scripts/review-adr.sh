@@ -11,6 +11,6 @@ if ! command -v copilot >/dev/null 2>&1; then
   exit 1
 fi
 
-copilot run --skill "$repo_root/.agents/skills/review-adr/SKILL.md" --prompt "Review the ADR files in $repo_root/docs/adr and produce a markdown summary. Include a blocking validation section for objective defects and an informational review section for advisory comments." > "$output_path"
+copilot -p "Using the review-adr skill, review the ADR files in $repo_root/docs/adr and produce a markdown summary. Include a blocking validation section for objective defects and an informational review section for advisory comments." --allow-all-tools > "$output_path"
 
 printf '\nReview summary written to %s\n' "$output_path"
