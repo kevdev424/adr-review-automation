@@ -43,6 +43,9 @@ foreach ($file in $adrFiles) {
     if ($frontMatter -notmatch '(?m)^authors\s*:') {
         $blockingMessages.Add("$($file.Name): authors metadata is missing")
     }
+    if ($frontMatter -notmatch '(?m)^tags\s*:') {
+        $blockingMessages.Add("$($file.Name): tags metadata is missing")
+    }
     if ($content -notmatch '(?m)^# ') {
         $blockingMessages.Add("$($file.Name): missing H1 heading")
     }

@@ -32,6 +32,7 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     needs: adr-review-validation
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -42,8 +43,19 @@ jobs:
       - name: Run informational ADR review
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           mkdir -p ./artifacts
-          copilot run --skill ./.agents/skills/review-adr/SKILL.md --prompt "Review the ADR changes in docs/adr and produce a PR-ready markdown summary for the pull request. Include a blocking validation section for objective defects and an informational review section for advisory comments." > ./artifacts/adr-review-summary.md
+          if ! copilot run --skill ./.agents/skills/review-adr/SKILL.md --prompt "Review the ADR changes in docs/adr and produce a PR-ready markdown summary for the pull request. Include a blocking validation section for objective defects and an informational review section for advisory comments." > ./artifacts/adr-review-summary.md; then
+            printf '%s\n' \
+              '## ADR Review Summary' \
+              '' \
+              '- Blocking validation: unavailable' \
+              '- Blocking findings:' \
+              '  - See the adr-review-validation check for blocking results.' \
+              '- Informational review:' \
+              '  - Copilot informational review could not be generated for this run.' \
+              > ./artifacts/adr-review-summary.md
+          fi
       - name: Create PR comment
         if: github.event_name == 'pull_request'
         env:

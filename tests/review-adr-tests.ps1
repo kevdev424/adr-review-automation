@@ -4,6 +4,7 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $validator = Join-Path $repoRoot '.specify/scripts/powershell/validate-adr.ps1'
+$reviewer = Join-Path $repoRoot '.specify/scripts/powershell/review-adr.ps1'
 $validFixture = Join-Path $repoRoot 'tests/fixtures/adr/adr-0001-valid.md'
 $invalidFixture = Join-Path $repoRoot 'tests/fixtures/adr/adr-0002-invalid.md'
 
@@ -18,6 +19,9 @@ if (Get-Command pwsh -ErrorAction SilentlyContinue) {
 
 if (-not (Test-Path $validator)) {
     throw "Validator script not found: $validator"
+}
+if (-not (Test-Path $reviewer)) {
+    throw "Review script not found: $reviewer"
 }
 
 $tmpRoot = Join-Path $repoRoot 'tests/output'
@@ -38,6 +42,23 @@ if ($LASTEXITCODE -ne 0) {
 & $psCommand -NoProfile -ExecutionPolicy Bypass -File $validator -AdrRoot $invalidDir
 if ($LASTEXITCODE -eq 0) {
     throw 'Expected the invalid ADR fixture to fail validation.'
+}
+
+$reviewOutput = Join-Path $tmpRoot 'review-summary.md'
+$reviewResult = & $psCommand -NoProfile -ExecutionPolicy Bypass -File $reviewer -AdrRoot $invalidDir -OutputPath $reviewOutput 2>&1
+if ($LASTEXITCODE -eq 0) {
+    throw 'Expected the invalid ADR fixture to fail review.'
+}
+
+$reviewText = ($reviewResult | Out-String)
+if ($reviewText -notmatch 'authors metadata is missing') {
+    throw 'Expected the review summary to report missing authors metadata.'
+}
+if ($reviewText -notmatch 'tags metadata is missing') {
+    throw 'Expected the review summary to report missing tags metadata.'
+}
+if (-not (Test-Path $reviewOutput)) {
+    throw 'Expected the review summary file to be created.'
 }
 
 Write-Host 'Review automation regression checks passed.'
