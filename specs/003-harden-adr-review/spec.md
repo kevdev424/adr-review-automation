@@ -17,6 +17,10 @@
 - Q: Should the conflicts section use a fixed, required heading/marker text, or is any clear plain-language explanation acceptable? → A: Require a fixed, recognizable heading/marker (e.g., a literal "⚠️ Conflicts with Accepted ADRs — Do Not Merge" heading) so tooling and readers can detect it reliably.
 - Clarification: the heading text "⚠️ Conflicts with Accepted ADRs — Do Not Merge" is the exact, locked literal string (case- and punctuation-exact) referenced by FR-004 — not merely an illustrative example — so it can be verified mechanically by tests and tooling.
 
+### Session 2026-08-08 (follow-up)
+
+- Q: How should the review handle a proposed ADR's `supersedes` field naming an ADR that doesn't exist or isn't an eligible accepted ADR? → A: Fall back to normal conflict checking — an invalid or ineligible `supersedes` reference is treated as if no supersession was declared, and the named ADR (if it happens to be an eligible accepted ADR under a different, valid path) is still evaluated for conflicts normally; a reference to a nonexistent ADR simply has no effect.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Reviewers see only the final ADR commentary (Priority: P1)
@@ -73,6 +77,7 @@ The conflict listing is a prominent, clearly-worded warning within the existing 
 - How does the review handle a repository with no accepted ADRs yet (e.g., only the template and proposed ADRs exist)? (No conflicts section is produced.)
 - How does the review handle a proposed ADR that conflicts with another ADR that is itself still proposed (not yet accepted)? (Not treated as a blocking-style conflict; may still be mentioned in standard commentary since only accepted ADRs are grounds for the top conflicts section.)
 - What happens if the underlying review tooling fails to produce output at all? (Existing fallback commentary behavior is preserved, and the fallback text must not fabricate a conflicts section that wasn't actually evaluated.)
+- How does the review handle a proposed ADR whose `supersedes` field names an ADR that doesn't exist in the repository or isn't an eligible accepted ADR? (The invalid or ineligible reference is treated as if no supersession was declared for that entry; it does not suppress a genuine conflict finding and does not itself produce a warning.)
 
 ## Requirements *(mandatory)*
 
@@ -86,6 +91,7 @@ The conflict listing is a prominent, clearly-worded warning within the existing 
 - **FR-005**: Each conflict entry MUST identify the specific accepted ADR in conflict and explain, in clear plain language, the nature of the contradiction and why the pull request should not be merged until it is addressed.
 - **FR-006**: When no obvious conflicts are detected, the review commentary MUST NOT include a conflicts section.
 - **FR-007**: An ADR that explicitly declares it supersedes an accepted ADR MUST NOT be reported as an unresolved conflict against that superseded ADR.
+- **FR-007a**: If a proposed ADR's `supersedes` field names an ADR that does not exist in the repository or is not an eligible accepted ADR, that reference MUST be treated as if no supersession was declared, and the named entry (if otherwise an eligible accepted ADR) MUST still be evaluated for conflicts normally.
 - **FR-008**: The conflict listing MUST remain part of the existing informational/advisory review output and MUST NOT alter the pass/fail outcome of the blocking validation check.
 - **FR-009**: The review skill's commentary format (reasoning-free output, conflicts-first ordering) MUST be identical whether run locally by a contributor or by the automated PR workflow.
 - **FR-010**: When the underlying review tooling fails to run, the fallback commentary MUST clearly indicate the review could not be completed and MUST NOT claim that no conflicts exist.

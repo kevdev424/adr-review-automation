@@ -14,7 +14,7 @@ Source: YAML front matter in `docs/adr/*.md` (per [docs/adr/README.md](../../doc
 | `authors` | string | Required (existing schema gate). |
 | `tags` | list | Required (existing schema gate). |
 | `dependencies` | list | Existing relationship metadata; unchanged by this feature. |
-| `supersedes` | list | Existing relationship metadata; used to recognize explicit, declared supersession so it is not misreported as an unresolved conflict (FR-007). |
+| `supersedes` | list | Existing relationship metadata; used to recognize explicit, declared supersession so it is not misreported as an unresolved conflict (FR-007). A `supersedes` entry naming an ADR that doesn't exist or isn't an eligible accepted ADR is treated as if no supersession was declared for that entry (FR-007a). |
 | `related_adrs` | list | Existing relationship metadata; unchanged. |
 | `relationship_rationale` | string | Existing relationship metadata; unchanged. |
 | `conflict_warnings` | list | Existing free-text field for authors to pre-declare known conflicts; unchanged, still authored by humans. |
