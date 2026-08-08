@@ -1,0 +1,27 @@
+name: Deploy ADR Ruleset
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/rulesets/adr-review-ruleset.json'
+      - '.github/workflows/deploy-ruleset.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy-ruleset:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PowerShell
+        uses: pwsh@v0.1.0
+
+      - name: Deploy ruleset
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./\.specify/scripts/powershell/deploy-ruleset.ps1 -RulesetPath ./.github/rulesets/adr-review-ruleset.json

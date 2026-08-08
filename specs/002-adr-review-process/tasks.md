@@ -10,10 +10,10 @@
 
 **Purpose**: Create the repository structure needed for ADR review automation and ruleset deployment.
 
-- [ ] T001 Create the review workflow and ruleset directories under .github/ with the required file layout
-- [ ] T002 Create the local review script entrypoint at scripts/review-adr.sh
-- [ ] T003 [P] Create the PowerShell review automation script at .specify/scripts/powershell/review-adr.ps1
-- [ ] T004 [P] Create the PowerShell ruleset deployment script at .specify/scripts/powershell/deploy-ruleset.ps1
+- [X] T001 Create the review workflow and ruleset directories under .github/ with the required file layout
+- [X] T002 Create the local review script entrypoint at scripts/review-adr.sh
+- [X] T003 [P] Create the PowerShell review automation script at .specify/scripts/powershell/review-adr.ps1
+- [X] T004 [P] Create the PowerShell ruleset deployment script at .specify/scripts/powershell/deploy-ruleset.ps1
 
 ---
 
@@ -21,11 +21,11 @@
 
 **Purpose**: Build the shared review and governance infrastructure that must exist before the ADR review workflow can run.
 
-- [ ] T005 Add a repository ruleset definition file at .github/rulesets/adr-review-ruleset.json
-- [ ] T006 Add a GitHub Actions workflow at .github/workflows/adr-review.yml for PR review automation
-- [ ] T007 Add a GitHub Actions workflow for ruleset deployment on merges to main
-- [ ] T008 Create the Copilot CLI review skill definition at .specify/skills/review-adr/SKILL.md
-- [ ] T009 Create the review prompt file at .github/prompts/review-adr.prompt.md
+- [X] T005 Add a repository ruleset definition file at .github/rulesets/adr-review-ruleset.json
+- [X] T006 Add a GitHub Actions workflow at .github/workflows/adr-review.yml for PR review automation
+- [X] T007 Add a GitHub Actions workflow for ruleset deployment on merges to main
+- [X] T008 Create the Copilot CLI review skill definition at .specify/skills/review-adr/SKILL.md
+- [X] T009 Create the review prompt file at .github/prompts/review-adr.prompt.md
 
 ---
 
@@ -37,9 +37,9 @@
 
 ### Implementation for User Story 1
 
-- [ ] T010 [P] [US1] Update the branch-creation workflow or hook configuration so new ADR work starts from main on a dedicated branch
-- [ ] T011 [US1] Add documentation or automation guidance for deriving the branch name from the ADR title in the local workflow
-- [ ] T012 [US1] Verify the branch-based workflow works locally and records the selected branch context for subsequent ADR work
+- [X] T010 [P] [US1] Update the branch-creation workflow or hook configuration so new ADR work starts from main on a dedicated branch
+- [X] T011 [US1] Add documentation or automation guidance for deriving the branch name from the ADR title in the local workflow
+- [X] T012 [US1] Verify the branch-based workflow works locally and records the selected branch context for subsequent ADR work
 
 **Checkpoint**: At this point, new ADR work can begin from a dedicated branch created from main.
 
@@ -53,9 +53,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T013 [P] [US2] Wire the PR workflow to run for ADR-related pull requests and collect the changed ADR files
-- [ ] T014 [US2] Ensure the ruleset requires one human review and that the automated review workflow must complete successfully before merge
-- [ ] T015 [US2] Add a workflow output or summary that clearly identifies the blocking validation and informational review results for the PR
+- [X] T013 [P] [US2] Wire the PR workflow to run for ADR-related pull requests and collect the changed ADR files
+- [X] T014 [US2] Ensure the ruleset requires one human review and that the automated review workflow must complete successfully before merge
+- [X] T015 [US2] Add a workflow output or summary that clearly identifies the blocking validation and informational review results for the PR
 
 **Checkpoint**: At this point, ADR pull requests are governed by the required review policy.
 
@@ -69,10 +69,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T016 [P] [US3] Extend the existing ADR validation logic to produce a blocking validation result for schema errors, missing information, or obvious incompleteness
-- [ ] T017 [US3] Implement the review skill invocation so it posts an informational PR comment for advisory concerns without blocking merge
-- [ ] T018 [US3] Add local execution support so contributors can run the same review skill used by the pull request workflow and observe the same blocking and informational outputs locally
-- [ ] T019 [US3] Document the local review command and expected output format in quickstart guidance
+- [X] T016 [P] [US3] Extend the existing ADR validation logic to produce a blocking validation result for schema errors, missing information, or obvious incompleteness
+- [X] T017 [US3] Implement the review skill invocation so it posts an informational PR comment for advisory concerns without blocking merge
+- [X] T018 [US3] Add local execution support so contributors can run the same review skill used by the pull request workflow and observe the same blocking and informational outputs locally
+- [X] T019 [US3] Document the local review command and expected output format in quickstart guidance
 
 **Checkpoint**: At this point, ADR PRs receive a clear two-step review outcome with separate blocking and informational results.
 
@@ -82,9 +82,9 @@
 
 **Purpose**: Finalize repo documentation and validation around the new ADR review workflow.
 
-- [ ] T020 [P] Update the ADR validation workflow or documentation to reflect the new review process and ruleset deployment path
-- [ ] T021 [P] Add or update tests or sample fixtures for the local review script and validation logic
-- [ ] T022 Validate the end-to-end review flow with a representative ADR change and confirm the workflow output format is consistent
+- [X] T020 [P] Update the ADR validation workflow or documentation to reflect the new review process and ruleset deployment path
+- [X] T021 [P] Add or update tests or sample fixtures for the local review script and validation logic
+- [X] T022 Validate the end-to-end review flow with a representative ADR change and confirm the workflow output format is consistent
 
 ---
 
