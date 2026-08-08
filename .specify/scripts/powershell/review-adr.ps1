@@ -3,10 +3,7 @@
 [CmdletBinding()]
 param(
     [string]$AdrRoot,
-    [string]$OutputPath,
-    [string]$Repository = $env:GITHUB_REPOSITORY,
-    [string]$PrNumber = $env:PR_NUMBER,
-    [string]$GitHubToken = $env:GITHUB_TOKEN
+    [string]$OutputPath
 )
 
 $ErrorActionPreference = 'Stop'
