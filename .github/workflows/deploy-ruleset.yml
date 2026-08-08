@@ -1,0 +1,53 @@
+name: Deploy ADR Ruleset
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/rulesets/adr-review-ruleset.json'
+      - '.github/workflows/deploy-ruleset.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy-ruleset:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      administration: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy ruleset with gh api
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          RULESET_FILE=".github/rulesets/adr-review-ruleset.json"
+          RULESET_NAME="adr-review-ruleset"
+
+          EXISTING_RULESET_ID="$(gh api \
+            --method GET \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/rulesets" \
+            --jq ".[] | select(.name == \"${RULESET_NAME}\") | .id" \
+            | head -n1 || true)"
+
+          if [ -n "${EXISTING_RULESET_ID}" ]; then
+            echo "Updating existing ruleset ${EXISTING_RULESET_ID}"
+            gh api \
+              --method PUT \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${GITHUB_REPOSITORY}/rulesets/${EXISTING_RULESET_ID}" \
+              --input "${RULESET_FILE}"
+          else
+            echo "Creating new ruleset"
+            gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "repos/${GITHUB_REPOSITORY}/rulesets" \
+              --input "${RULESET_FILE}"
+          fi

@@ -1,0 +1,69 @@
+name: ADR Review
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  pull_request:
+    paths:
+      - 'docs/adr/**'
+      - '.specify/scripts/powershell/validate-adr.ps1'
+      - '.github/workflows/adr-review.yml'
+      - '.github/prompts/review-adr.prompt.md'
+      - '.agents/skills/review-adr/SKILL.md'
+  workflow_dispatch:
+
+jobs:
+  adr-review-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify PowerShell is available
+        run: pwsh -NoProfile -Command '$PSVersionTable.PSVersion'
+      - name: Run blocking ADR validation
+        shell: pwsh
+        run: |
+          ./.specify/scripts/powershell/validate-adr.ps1
+
+  adr-review-commentary:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs: adr-review-validation
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Copilot CLI
+        run: |
+          npm install -g @github/copilot
+
+      - name: Run informational ADR review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p ./artifacts
+          if ! copilot run --skill ./.agents/skills/review-adr/SKILL.md --prompt "Review the ADR changes in docs/adr and produce a PR-ready markdown summary for the pull request. Include a blocking validation section for objective defects and an informational review section for advisory comments." > ./artifacts/adr-review-summary.md; then
+            printf '%s\n' \
+              '## ADR Review Summary' \
+              '' \
+              '- Blocking validation: unavailable' \
+              '- Blocking findings:' \
+              '  - See the adr-review-validation check for blocking results.' \
+              '- Informational review:' \
+              '  - Copilot informational review could not be generated for this run.' \
+              > ./artifacts/adr-review-summary.md
+          fi
+      - name: Create PR comment
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file ./artifacts/adr-review-summary.md
+      - name: Upload review summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: adr-review-summary
+          path: ./artifacts/adr-review-summary.md
