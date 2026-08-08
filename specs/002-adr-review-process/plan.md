@@ -68,6 +68,8 @@ specs/002-adr-review-process/
 │   └── powershell/
 │       ├── validate-adr.ps1
 │       └── review-adr.ps1
+
+.agents/
 └── skills/
     └── review-adr/
         └── SKILL.md
