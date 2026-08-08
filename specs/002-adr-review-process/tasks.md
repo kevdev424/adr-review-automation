@@ -13,7 +13,7 @@
 - [X] T001 Create the review workflow and ruleset directories under .github/ with the required file layout
 - [X] T002 Create the local review script entrypoint at scripts/review-adr.sh
 - [X] T003 [P] Create the PowerShell review automation script at .specify/scripts/powershell/review-adr.ps1
-- [X] T004 [P] Create the PowerShell ruleset deployment script at .specify/scripts/powershell/deploy-ruleset.ps1
+- [X] T004 [P] Implement ruleset deployment in .github/workflows/deploy-ruleset.yml using inline gh api
 
 ---
 

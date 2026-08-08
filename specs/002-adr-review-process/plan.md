@@ -56,7 +56,8 @@ specs/002-adr-review-process/
 .github/
 ├── workflows/
 │   ├── adr-validation.yml
-│   └── adr-review.yml
+│   ├── adr-review.yml
+│   └── deploy-ruleset.yml
 ├── rulesets/
 │   └── adr-review-ruleset.json
 └── prompts/
@@ -66,8 +67,7 @@ specs/002-adr-review-process/
 ├── scripts/
 │   └── powershell/
 │       ├── validate-adr.ps1
-│       ├── review-adr.ps1
-│       └── deploy-ruleset.ps1
+│       └── review-adr.ps1
 └── skills/
     └── review-adr/
         └── SKILL.md
