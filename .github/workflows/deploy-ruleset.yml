@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      administration: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,7 +21,7 @@ jobs:
       - name: Deploy ruleset with gh api
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ADR_RULESET_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
