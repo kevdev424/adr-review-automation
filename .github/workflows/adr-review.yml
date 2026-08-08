@@ -17,9 +17,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up PowerShell
-        uses: pwsh@v0.1.0
-
+      - name: Verify PowerShell is available
+        run: pwsh -NoProfile -Command '$PSVersionTable.PSVersion'
       - name: Run blocking ADR validation
         shell: pwsh
         run: |
