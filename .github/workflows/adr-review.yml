@@ -26,7 +26,7 @@ jobs:
       - name: Run blocking ADR validation
         shell: pwsh
         run: |
-          ./\.specify/scripts/powershell/validate-adr.ps1
+          ./.specify/scripts/powershell/validate-adr.ps1
 
   adr-review-commentary:
     if: ${{ always() }}
