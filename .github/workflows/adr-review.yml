@@ -51,8 +51,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr comment "$GITHUB_REF_NAME" --body-file ./artifacts/adr-review-summary.md
-
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file ./artifacts/adr-review-summary.md
       - name: Upload review summary
         uses: actions/upload-artifact@v4
         with:
