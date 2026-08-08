@@ -42,7 +42,7 @@ jobs:
 
       - name: Run informational ADR review
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ADR_RULESET_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p ./artifacts
           if ! copilot -p "Using the review-adr skill, review the ADR changes in docs/adr and produce a PR-ready markdown summary for the pull request. Include a blocking validation section for objective defects and an informational review section for advisory comments." --allow-all-tools > ./artifacts/adr-review-summary.md; then
