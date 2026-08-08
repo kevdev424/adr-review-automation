@@ -15,6 +15,7 @@
 - Q: Which ADR status value(s) should count as "accepted" when checking a proposed ADR for conflicts? → A: ADRs with status "Accepted" or "Approved" (case-insensitive) count as the accepted baseline.
 - Q: Should an accepted ADR that has been superseded (has a non-empty `superseded_by` field) still be used as a conflict baseline? → A: No — an accepted ADR with a non-empty `superseded_by` field is excluded from the conflict baseline; only currently-active accepted ADRs count.
 - Q: Should the conflicts section use a fixed, required heading/marker text, or is any clear plain-language explanation acceptable? → A: Require a fixed, recognizable heading/marker (e.g., a literal "⚠️ Conflicts with Accepted ADRs — Do Not Merge" heading) so tooling and readers can detect it reliably.
+- Clarification: the heading text "⚠️ Conflicts with Accepted ADRs — Do Not Merge" is the exact, locked literal string (case- and punctuation-exact) referenced by FR-004 — not merely an illustrative example — so it can be verified mechanically by tests and tooling.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -81,7 +82,7 @@ The conflict listing is a prominent, clearly-worded warning within the existing 
 - **FR-002**: The review skill MUST NOT include narration of its own analysis process, intermediate reasoning, or working notes in the PR commentary output.
 - **FR-003**: The review skill MUST evaluate the proposed ADR against all currently accepted ADRs in the repository — ADRs whose status field is "Accepted" or "Approved" (case-insensitive) and whose `superseded_by` field is empty — to detect obvious conflicts (direct contradictions in decisions, scope, or constraints).
 - **FR-003a**: An accepted ADR with a non-empty `superseded_by` field MUST be excluded from the conflict baseline, since it no longer represents an active decision.
-- **FR-004**: When one or more obvious conflicts with accepted ADRs are detected, the review commentary MUST present a distinct conflicts section as the first content in the comment, before any other commentary, opening with a fixed, recognizable heading/marker (e.g., "⚠️ Conflicts with Accepted ADRs — Do Not Merge") so the section can be reliably detected by both readers and tooling.
+- **FR-004**: When one or more obvious conflicts with accepted ADRs are detected, the review commentary MUST present a distinct conflicts section as the first content in the comment, before any other commentary, opening with the exact, locked heading text "⚠️ Conflicts with Accepted ADRs — Do Not Merge" so the section can be reliably detected by both readers and tooling.
 - **FR-005**: Each conflict entry MUST identify the specific accepted ADR in conflict and explain, in clear plain language, the nature of the contradiction and why the pull request should not be merged until it is addressed.
 - **FR-006**: When no obvious conflicts are detected, the review commentary MUST NOT include a conflicts section.
 - **FR-007**: An ADR that explicitly declares it supersedes an accepted ADR MUST NOT be reported as an unresolved conflict against that superseded ADR.
