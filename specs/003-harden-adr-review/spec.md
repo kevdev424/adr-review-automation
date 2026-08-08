@@ -21,6 +21,13 @@
 
 - Q: How should the review handle a proposed ADR's `supersedes` field naming an ADR that doesn't exist or isn't an eligible accepted ADR? → A: Fall back to normal conflict checking — an invalid or ineligible `supersedes` reference is treated as if no supersession was declared, and the named ADR (if it happens to be an eligible accepted ADR under a different, valid path) is still evaluated for conflicts normally; a reference to a nonexistent ADR simply has no effect.
 
+### Session 2026-08-08 (second follow-up)
+
+- Q: How should "process/reasoning narration" be precisely defined for FR-001/FR-002? → A: Structurally — any sentence describing the reviewer's own steps or actions (first-person action language such as "I checked/looked/considered/will now...") counts as narration; a sentence making a statement about the ADR itself does not.
+- Q: Should the no-issues-found comment have a specific required length/format? → A: Yes — a single short statement of no more than two sentences confirming the ADR looks acceptable, with no further elaboration required.
+- Q: How should the fixed heading behave in non-Markdown rendering contexts? → A: Out of scope — FR-004's exact heading text is explicitly scoped to GitHub-flavored Markdown PR comments only; non-Markdown rendering is not addressed by this feature.
+- Q: Should SC-001 and SC-003 be redefined around mechanical/testable proxies? → A: Yes — both are reframed around the same mechanical checks already used for SC-002/SC-004: absence of first-person action language (per the FR-002 definition) and heading presence/position, verified via the test harness rather than purely manual/subjective judgment.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Reviewers see only the final ADR commentary (Priority: P1)
@@ -84,10 +91,10 @@ The conflict listing is a prominent, clearly-worded warning within the existing 
 ### Functional Requirements
 
 - **FR-001**: The review skill MUST produce PR commentary that contains only final observations and conclusions about the proposed ADR's content, structure, and quality.
-- **FR-002**: The review skill MUST NOT include narration of its own analysis process, intermediate reasoning, or working notes in the PR commentary output.
+- **FR-002**: The review skill MUST NOT include narration of its own analysis process, intermediate reasoning, or working notes in the PR commentary output. Narration is defined structurally as any sentence describing the reviewer's own steps or actions using first-person action language (e.g., "I checked...", "I looked...", "I considered...", "I will now..."); a sentence stating an observation about the ADR itself is not narration.
 - **FR-003**: The review skill MUST evaluate the proposed ADR against all currently accepted ADRs in the repository — ADRs whose status field is "Accepted" or "Approved" (case-insensitive) and whose `superseded_by` field is empty — to detect obvious conflicts (direct contradictions in decisions, scope, or constraints).
 - **FR-003a**: An accepted ADR with a non-empty `superseded_by` field MUST be excluded from the conflict baseline, since it no longer represents an active decision.
-- **FR-004**: When one or more obvious conflicts with accepted ADRs are detected, the review commentary MUST present a distinct conflicts section as the first content in the comment, before any other commentary, opening with the exact, locked heading text "⚠️ Conflicts with Accepted ADRs — Do Not Merge" so the section can be reliably detected by both readers and tooling.
+- **FR-004**: When one or more obvious conflicts with accepted ADRs are detected, the review commentary MUST present a distinct conflicts section as the first content in the comment, before any other commentary, opening with the exact, locked heading text "⚠️ Conflicts with Accepted ADRs — Do Not Merge" so the section can be reliably detected by both readers and tooling. This exact heading text applies to GitHub-flavored Markdown PR comments, which is the only rendering context this feature addresses; non-Markdown rendering is out of scope.
 - **FR-005**: Each conflict entry MUST identify the specific accepted ADR in conflict and explain, in clear plain language, the nature of the contradiction and why the pull request should not be merged until it is addressed.
 - **FR-006**: When no obvious conflicts are detected, the review commentary MUST NOT include a conflicts section.
 - **FR-007**: An ADR that explicitly declares it supersedes an accepted ADR MUST NOT be reported as an unresolved conflict against that superseded ADR.
@@ -95,6 +102,7 @@ The conflict listing is a prominent, clearly-worded warning within the existing 
 - **FR-008**: The conflict listing MUST remain part of the existing informational/advisory review output and MUST NOT alter the pass/fail outcome of the blocking validation check.
 - **FR-009**: The review skill's commentary format (reasoning-free output, conflicts-first ordering) MUST be identical whether run locally by a contributor or by the automated PR workflow.
 - **FR-010**: When the underlying review tooling fails to run, the fallback commentary MUST clearly indicate the review could not be completed and MUST NOT claim that no conflicts exist.
+- **FR-011**: When no issues are found with a proposed ADR, the commentary's no-issues statement MUST be no more than two sentences confirming the ADR looks acceptable, with no further elaboration.
 
 ### Key Entities
 
@@ -107,9 +115,9 @@ The conflict listing is a prominent, clearly-worded warning within the existing 
 
 ### Measurable Outcomes
 
-- **SC-001**: 100% of generated PR review comments contain zero instances of process/reasoning narration (e.g., no first-person analysis narration phrases) when manually sampled.
+- **SC-001**: 100% of generated PR review comments contain zero sentences using first-person action language (per the FR-002 definition), verified via the automated test harness rather than manual sampling alone.
 - **SC-002**: When a proposed ADR obviously conflicts with an accepted ADR, the conflicts section appears as the first content in the PR comment in 100% of test cases.
-- **SC-003**: Reviewers can identify, within the first few seconds of reading a PR comment, whether a proposed ADR has an unresolved conflict with an accepted decision, without reading the rest of the comment.
+- **SC-003**: 100% of test-case PR comments with a conflict allow a reviewer to determine conflict status by checking only for the presence and position of the fixed conflicts heading, without needing to read the rest of the comment.
 - **SC-004**: Comments generated for ADRs with no conflicts contain no conflicts section in 100% of test cases.
 - **SC-005**: Local and CI-generated review commentary are indistinguishable in format for the same ADR input.
 
