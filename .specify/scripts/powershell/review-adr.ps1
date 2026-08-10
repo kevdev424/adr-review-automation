@@ -22,6 +22,19 @@ if (-not $resolvedAdrRoot) {
 $adrFiles = Get-ChildItem -Path $resolvedAdrRoot -Filter 'adr-*.md' -File | Sort-Object Name
 $blockingMessages = New-Object System.Collections.Generic.List[string]
 $advisoryMessages = New-Object System.Collections.Generic.List[string]
+$eligibilityRecords = New-Object System.Collections.Generic.List[pscustomobject]
+
+function Get-FrontMatterValue {
+    param(
+        [string]$FrontMatter,
+        [string]$Key
+    )
+
+    if ($FrontMatter -match "(?m)^$([regex]::Escape($Key))\s*:\s*(.*)$") {
+        return $Matches[1].Trim().Trim('"''')
+    }
+    return ''
+}
 
 foreach ($file in $adrFiles) {
     $content = Get-Content -Path $file.FullName -Raw
@@ -53,7 +66,23 @@ foreach ($file in $adrFiles) {
     if ($content -match '(?i)\bTODO\b') {
         $advisoryMessages.Add("$($file.Name): contains TODO language that may need refinement")
     }
+
+    # Accepted-baseline eligibility (FR-003, FR-003a): status must be Accepted/Approved
+    # (case-insensitive) and superseded_by must be empty.
+    $status = Get-FrontMatterValue -FrontMatter $frontMatter -Key 'status'
+    $supersededBy = Get-FrontMatterValue -FrontMatter $frontMatter -Key 'superseded_by'
+    $isAcceptedStatus = $status -match '^(Accepted|Approved)$'
+    $isEligibleBaseline = $isAcceptedStatus -and [string]::IsNullOrEmpty($supersededBy)
+
+    $eligibilityRecords.Add([pscustomobject]@{
+        File               = $file.Name
+        Status             = $status
+        IsAcceptedStatus   = $isAcceptedStatus
+        SupersededBy       = $supersededBy
+        IsEligibleBaseline = $isEligibleBaseline
+    })
 }
+
 
 if ($blockingMessages.Count -eq 0) {
     $blockingSummary = 'PASS'
@@ -81,6 +110,16 @@ if ($advisoryMessages.Count -gt 0) {
     }
 } else {
     $reviewSummary += '  - No advisory concerns detected.'
+}
+
+$reviewSummary += '- Accepted baseline eligibility:'
+if ($eligibilityRecords.Count -gt 0) {
+    foreach ($record in $eligibilityRecords) {
+        $eligibility = if ($record.IsEligibleBaseline) { 'Eligible' } elseif ($record.IsAcceptedStatus) { 'Not eligible (superseded)' } else { 'Not eligible (not accepted)' }
+        $reviewSummary += "  - $($record.File): $eligibility"
+    }
+} else {
+    $reviewSummary += '  - No ADR files evaluated.'
 }
 
 $summaryText = $reviewSummary -join [Environment]::NewLine

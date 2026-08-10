@@ -49,3 +49,4 @@ Open a draft PR touching `docs/adr/**` with the conflicting fixture ADR and conf
 
 - The `adr-review-validation` check still passes (no schema defects).
 - The `adr-review-commentary` check posts a PR comment matching the same structure produced locally in step 4.
+- The blocking `adr-review-validation` check passing and the conflicts warning appearing in `adr-review-commentary` are independent outcomes: the conflict warning does not change the blocking check's pass/fail result, and a human reviewer remains responsible for deciding whether to act on it before approving the PR (FR-008, US3).
