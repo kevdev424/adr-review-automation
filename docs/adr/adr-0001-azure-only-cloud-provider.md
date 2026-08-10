@@ -1,6 +1,6 @@
 ---
 title: "ADR-0001: Standardize on Azure as the Only Cloud Provider"
-status: "Proposed"
+status: "Accepted"
 date: "2026-08-08"
 authors: "Repository Maintainers"
 tags: ["architecture", "decision", "cloud", "infrastructure"]
