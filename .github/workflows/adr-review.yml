@@ -40,12 +40,20 @@ jobs:
         run: |
           npm install -g @github/copilot
 
+      - name: Compute accepted-baseline eligibility
+        shell: pwsh
+        run: |
+          mkdir -p ./artifacts
+          ./.specify/scripts/powershell/review-adr.ps1 -AdrRoot ./docs/adr -OutputPath ./artifacts/review-adr-eligibility.md
+        continue-on-error: true
+
       - name: Run informational ADR review
         env:
           GH_TOKEN: ${{ secrets.ADR_RULESET_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p ./artifacts
-          if ! copilot -p "Using the review-adr skill, review the ADR changes in docs/adr and produce a PR-ready markdown summary for the pull request. Include a blocking validation section for objective defects and an informational review section for advisory comments." --allow-all-tools > ./artifacts/adr-review-summary.md; then
+          eligible_baseline="$(grep -A50 'Accepted baseline eligibility' ./artifacts/review-adr-eligibility.md 2>/dev/null || true)"
+          if ! copilot -p "Using the review-adr skill, review the ADR changes in docs/adr and produce a PR-ready markdown summary for the pull request. Include a blocking validation section for objective defects and an informational review section for advisory comments. Output only final observations and conclusions about the ADR; never narrate your own review process (no first-person action language such as 'I checked...' or 'I will now...'). When no issues are found, state in no more than two sentences that the ADR looks acceptable. The following accepted-baseline eligibility was computed deterministically for docs/adr — treat only entries marked 'Eligible' as valid conflict targets, and check the proposed ADR(s) against them for obvious conflicts per the conflicts-first heading contract: ${eligible_baseline}" --allow-all-tools > ./artifacts/adr-review-summary.md; then
             printf '%s\n' \
               '## ADR Review Summary' \
               '' \
@@ -53,7 +61,7 @@ jobs:
               '- Blocking findings:' \
               '  - See the adr-review-validation check for blocking results.' \
               '- Informational review:' \
-              '  - Copilot informational review could not be generated for this run.' \
+              '  - The informational review could not be completed for this run. Conflicts with accepted ADRs were not checked; do not treat the absence of a conflicts section here as confirmation that none exist.' \
               > ./artifacts/adr-review-summary.md
           fi
       - name: Create PR comment
